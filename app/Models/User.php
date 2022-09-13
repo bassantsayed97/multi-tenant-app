@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'tenant_id'
     ];
 
     /**
@@ -60,5 +61,10 @@ class User extends Authenticatable
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class,'tenant_id');
     }
 }
