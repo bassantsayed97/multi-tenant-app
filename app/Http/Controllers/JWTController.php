@@ -40,6 +40,7 @@ class JWTController extends Controller
         $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'tenant_id' => $request->tenant_id,
                 'password' => Hash::make($request->password)
             ]);
 
