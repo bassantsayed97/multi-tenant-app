@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,8 +64,32 @@ class User extends Authenticatable
         return [];
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        // dd(self::current_tenant());
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('users.tenant_id', self::current_tenant());
+        });
+    }
+
+    private static function current_tenant()
+    {
+        // $domain = explode('/',substr(request()->root(), 7))[0];
+        $domain = request()->getHost();
+        return Tenant::where('domain' , $domain)->first()?->id;
+    }
+
     public function tenant()
     {
         return $this->belongsTo(Tenant::class,'tenant_id');
     }
+
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'user_id');
+    }
+
 }
