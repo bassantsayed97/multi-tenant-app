@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JWTController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,5 +27,12 @@ Route::group(['middleware' => 'api'], function($router) {
     Route::post('/refresh', [JWTController::class, 'refresh']);
     Route::post('/profile', [JWTController::class, 'profile']);
     Route::get('/tenants', [TenantController::class, 'index']);
+     Route::get('/products', [Product::class, 'index']);
+       Route::prefix('products')->group(function() {
+            Route::get('/', [ProductController::class, 'index'])->name('product.index');
+            Route::post('store', [ProductController::class, 'store'])->name('products.store');
+
+      
+    });
 
 });
